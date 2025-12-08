@@ -125,3 +125,60 @@ if ('IntersectionObserver' in window) {
         imageObserver.observe(img);
     });
 }
+
+// 返回顶部按钮（可选功能）
+function createBackToTop() {
+    const backToTop = document.createElement('button');
+    backToTop.innerHTML = '↑';
+    backToTop.className = 'back-to-top';
+    backToTop.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    `;
+    
+    document.body.appendChild(backToTop);
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTop.style.opacity = '1';
+            backToTop.style.visibility = 'visible';
+        } else {
+            backToTop.style.opacity = '0';
+            backToTop.style.visibility = 'hidden';
+        }
+    });
+
+    backToTop.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    backToTop.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.1)';
+        this.style.background = 'var(--dark-red)';
+    });
+
+    backToTop.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+        this.style.background = 'var(--primary-red)';
+    });
+}
+
+createBackToTop();
+
