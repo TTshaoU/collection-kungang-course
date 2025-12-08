@@ -400,3 +400,302 @@ section {
     letter-spacing: 1px;
 }
 /* --- 校史概览卡片优化结束 --- */
+
+
+/* --- 校史时间轴 (沉浸式红色风格) --- */
+
+.timeline-section {
+    /* 背景图 + 深红渐变遮罩 */
+    background: 
+        linear-gradient(135deg, rgba(160, 13, 36, 0.96) 0%, rgba(100, 8, 20, 0.98) 100%),
+        url('../images/museum_banner.png'); /* 建议换一张不同的校园远景图，或者复用 */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* 视差滚动效果，显得更高端 */
+    position: relative;
+    color: var(--white);
+    padding: 100px 0;
+}
+
+/* 标题区域适配暗色背景 */
+.timeline-section .section-header h2 {
+    color: var(--white);
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.timeline-section .section-header h2::after {
+    background: var(--gold); /* 保持金色下划线 */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* 金色发光 */
+}
+
+.timeline-section .section-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- 校史时间轴 (高端优化版) --- */
+
+/* 时间轴主容器竖线 */
+.timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+/* 中央金色渐变竖线 */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,215,0,0.5) 15%, 
+        rgba(255,215,0,0.5) 85%, 
+        rgba(255,255,255,0) 100%);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 5rem;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-item:nth-child(odd) {
+    flex-direction: row;
+}
+
+.timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+/* 时间轴节点（圆点）- 增加发光呼吸感 */
+.timeline-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--dark-red); /* 内部深红 */
+    border: 4px solid var(--gold); /* 外部金色边框 */
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+/* 节点悬停交互 */
+.timeline-item:hover .timeline-marker {
+    transform: translateX(-50%) scale(1.3);
+    background: var(--gold);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+}
+
+/* 内容卡片 - 渐变流光玻璃风格 (核心优化) */
+.timeline-content {
+    width: 45%;
+    /* 线性渐变模拟光照，比纯色更透气 */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    /* 强力磨砂 */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 2.5rem;
+    border-radius: 16px;
+    /* 金色微边框 */
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    /* 内发光+外阴影，制造厚度感 */
+    box-shadow: 
+        inset 0 0 20px rgba(255, 255, 255, 0.05),
+        0 15px 35px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 卡片悬停交互 - 上浮+高亮 */
+.timeline-content:hover {
+    transform: translateY(-8px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 
+        inset 0 0 20px rgba(255, 255, 255, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+/* 连接线（指向中间的小横线）- 渐变金 */
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 38px; /* 对齐年份标签中心 */
+    width: 30px;
+    height: 1px;
+    /* 默认为右侧连接线（奇数项） */
+    background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+/* 奇数项连接线位置 */
+.timeline-item:nth-child(odd) .timeline-content::before {
+    right: -30px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+}
+/* 偶数项连接线位置 */
+.timeline-item:nth-child(even) .timeline-content::before {
+    left: -30px;
+    background: linear-gradient(-90deg, var(--gold), transparent);
+}
+
+/* 年份标签 - 红金配色 (美观优化) */
+.timeline-year {
+    display: inline-block;
+    /* 金色流光渐变背景 */
+    background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    /* 深红文字 */
+    color: #8B0000;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px 12px 4px 12px; /* 异形圆角 */
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* 卡片标题 - 亮金色 */
+.timeline-content h3 {
+    color: #FFD700;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 图片容器 */
+.timeline-image {
+    width: 100%;
+    height: 220px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.timeline-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.timeline-image:hover img {
+    transform: scale(1.1);
+}
+
+/* 正文文字 - 提高对比度 */
+.timeline-content p {
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.8;
+    font-size: 1.05rem;
+    font-weight: 300;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 30px;
+    }
+
+    .timeline-marker {
+        left: 30px;
+    }
+
+    .timeline-item {
+        flex-direction: column !important;
+        align-items: flex-start;
+        padding-left: 70px;
+        margin-bottom: 3rem;
+    }
+
+    .timeline-content {
+        width: 100%;
+    }
+
+    /* 移动端隐藏连接线 */
+    .timeline-content::before {
+        display: none;
+    }
+}
+
+/* 红色文化 */
+.red-culture-section {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+}
+
+.red-culture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.culture-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.culture-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.culture-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.culture-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.culture-image:hover img {
+    transform: scale(1.1);
+}
+
+.culture-image .placeholder-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.culture-content {
+    padding: 2rem;
+}
+
+.culture-content h3 {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.culture-content p {
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}

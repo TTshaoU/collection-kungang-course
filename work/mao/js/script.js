@@ -65,3 +65,63 @@ function highlightNavigation() {
 }
 
 window.addEventListener('scroll', highlightNavigation);
+
+// 时间轴动画
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// 观察时间轴项目
+document.querySelectorAll('.timeline-item').forEach(item => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(50px)';
+    item.style.transition = 'all 0.6s ease';
+    observer.observe(item);
+});
+
+// 观察卡片
+document.querySelectorAll('.intro-card, .culture-card, .spirit-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'all 0.6s ease';
+    observer.observe(card);
+});
+
+// 页面加载动画
+window.addEventListener('load', function() {
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+});
+
+// 图片懒加载（如果有真实图片）
+if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    imageObserver.unobserve(img);
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
